@@ -6,6 +6,7 @@ import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 import random
+import pickle
 # import pytz
 
 
@@ -73,10 +74,10 @@ for i in range(len(path)-1):
 # journ = np.cumsum(dists)
 # plt.plot(journ, elvs)
 # plt.show()
-plt.hist(dists, bins=100)
-print(max(dists),np.argmax(dists))
-print(min(dists),np.argmin(dists))
-plt.show()
+# plt.hist(dists, bins=100)
+# print(max(dists),np.argmax(dists))
+# print(min(dists),np.argmin(dists))
+# plt.show()
 bins = 500
 histdata = np.histogram(bearings, bins=bins, weights=dists)
 count = histdata[0]
@@ -84,11 +85,11 @@ angles = np.radians(histdata[1])
 bottom = max(count)*(2/3)
 width = (2*np.pi) / len(count)
 
-# ax = plt.subplot(111, polar=True)
-# ax.set_theta_zero_location("N")
-# ax.set_theta_direction(-1)
-# bars = ax.bar(angles[:-1], count, width=width, bottom=bottom)
-# plt.show()
+ax = plt.subplot(111, polar=True)
+ax.set_theta_zero_location("N")
+ax.set_theta_direction(-1)
+bars = ax.bar(angles[:-1], count, width=width, bottom=bottom)
+plt.show()
 alts = []
 azs = []
 weights = []
@@ -103,7 +104,7 @@ for i in range(len(dists)):
         car_position.date = random_time(START, END)
         sun = ephem.Sun(car_position)
         alts.append(sun.alt)
-        azs.append((sun.az + math.radians(bearings[i])) % 2*math.pi)
+        azs.append((sun.az - math.radians(bearings[i])) % 2*math.pi)
         weights.append(min(dists[i], 5000))
 
 alts.append(-math.pi)
@@ -112,5 +113,7 @@ weights.append(0)
 alts.append(math.pi)
 azs.append(math.pi)
 weights.append(0)
-plt.hist2d(azs, alts, bins=1024, weights=weights)
+plt.hist2d(azs, alts, bins=256, weights=weights)
+results = np.histogram2d(azs, alts, bins=4096)
+pickle.dump(results, open("results.pkl", "wb"))
 plt.show()
