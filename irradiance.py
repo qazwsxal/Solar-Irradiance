@@ -2,11 +2,11 @@ import ephem
 import gpxpy
 import gpxpy.gpx
 import math
-import numpy as np
-import datetime as dt
-import matplotlib.pyplot as plt
 import random
 import pickle
+import datetime as dt
+import numpy as np
+import matplotlib.pyplot as plt
 # import pytz
 
 
@@ -98,7 +98,7 @@ for i in range(len(dists)):
     car_position.lon = str(path[i].longitude)
     car_position.lat = str(path[i].latitude)
     car_position.elevation = path[i].elevation
-    if (i % 100 == 0):
+    if i % 100 == 0:
         print(100*i/len(dists), '%')
     for j in range(100):
         car_position.date = random_time(START, END)
@@ -106,7 +106,7 @@ for i in range(len(dists)):
         alts.append(sun.alt)
         azs.append((sun.az - math.radians(bearings[i])) % 2*math.pi)
         weights.append(min(dists[i], 5000))
-
+# Append points at top and bottom of range to guarantee 360deg map
 alts.append(-math.pi)
 azs.append(math.pi)
 weights.append(0)
