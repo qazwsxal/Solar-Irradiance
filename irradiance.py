@@ -78,7 +78,7 @@ for i in range(len(path)-1):
 # print(max(dists),np.argmax(dists))
 # print(min(dists),np.argmin(dists))
 # plt.show()
-bins = 500
+bins = 100
 histdata = np.histogram(bearings, bins=bins, weights=dists)
 count = histdata[0]
 angles = np.radians(histdata[1])
